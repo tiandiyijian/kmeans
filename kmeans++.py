@@ -2,9 +2,19 @@
 import numpy as np
 import mat4py
 import matplotlib.pyplot as plt
+import sys
 
 def distance(pointA, pointB):
     return np.linalg.norm(pointA - pointB)
+
+def getMinDistance(point, centroids, numOfcentroids):
+    min_distance = sys.maxsize
+    for i in range(numOfcentroids):
+        dist = distance(point, centroids[i])
+        if dist < min_distance:
+            min_distance = dist
+    return min_distance
+
 
 def kmeans(data, k, iterations=100):
     '''
@@ -15,7 +25,24 @@ def kmeans(data, k, iterations=100):
     '''
     numOfPoints = data.shape[0]
     classes = np.zeros(numOfPoints)
-    centroids = data[np.random.randint(0, numOfPoints, k), :]
+    centroids = np.zeros((k, data.shape[1]))
+    centroids[0] = data[np.random.randint(0, numOfPoints)]
+    distanceArray = [0] * numOfPoints
+    for iterK in range(1, k):
+        total = 0.0
+        for i, point in enumerate(data):
+            distanceArray[i] = getMinDistance(point, centroids, iterK)
+            total += distanceArray[i]
+        total *= np.random.rand()
+        for i, di in enumerate(distanceArray):
+            total -= di
+            if total > 0:
+                continue
+            centroids[iterK] = data[i]
+            break
+    print(centroids)
+
+
     distance_matrix = np.zeros((numOfPoints, k))
     for i in range(iterations):
         preClasses = classes.copy()

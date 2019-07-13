@@ -2,6 +2,7 @@
 import numpy as np
 import mat4py
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 import sys
 
 def distance(pointA, pointB):
@@ -54,7 +55,7 @@ def kmeans(data, k, iterations=100):
             centroids[iterK] = np.mean(data[np.where(classes==iterK)], 0)
 
         print('iteration:', i+1)
-        print((classes - preClasses).sum())
+        # print((classes - preClasses).sum())
         if (classes - preClasses).sum() == 0:
             break
     return (centroids, classes)
@@ -65,10 +66,13 @@ if __name__ == '__main__':
 
     centroids, classes =  kmeans(data, 3, 5000)
     print(centroids)
-    plt.scatter(data[:, 0], data[: , 1])
-    plt.scatter(centroids[:, 0], centroids[:, 1], c='red')
-    plt.show()
 
-    # a = np.array([1,1])
-    # b = np.array([2,1])
-    # print(distance(a, b))
+    colors = list(colors.cnames.keys())
+    colors[0] = 'red'
+    colors[1] = 'blue'
+    colors[2] = 'green'
+    colors[3] = 'purple'
+    for i in range(centroids.shape[0]):
+        plt.scatter(data[np.where(classes==i), 0], data[np.where(classes==i), 1], c=colors[i], alpha=0.4)
+        plt.scatter(centroids[i, 0], centroids[i, 1], c=colors[i], marker='+', s=1000)
+    plt.show()

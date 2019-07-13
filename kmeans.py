@@ -2,6 +2,8 @@
 import numpy as np
 import mat4py
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
+from sklearn import preprocessing
 
 def distance(pointA, pointB):
     return np.linalg.norm(pointA - pointB)
@@ -35,13 +37,17 @@ def kmeans(data, k, iterations=100):
 if __name__ == '__main__':
     data = mat4py.loadmat('data/toy_clustering.mat')['r1']
     data = np.array(data)
+    data = preprocessing.MinMaxScaler().fit_transform(data)
 
     centroids, classes =  kmeans(data, 3, 5000)
     print(centroids)
-    plt.scatter(data[:, 0], data[: , 1])
-    plt.scatter(centroids[:, 0], centroids[:, 1], c='red')
-    plt.show()
 
-    # a = np.array([1,1])
-    # b = np.array([2,1])
-    # print(distance(a, b))
+    colors = list(colors.cnames.keys())
+    colors[0] = 'red'
+    colors[1] = 'blue'
+    colors[2] = 'green'
+    colors[3] = 'purple'
+    for i in range(centroids.shape[0]):
+        plt.scatter(data[np.where(classes == i), 0], data[np.where(classes == i), 1], c=colors[i], alpha=0.4)
+        plt.scatter(centroids[i, 0], centroids[i, 1], c=colors[i], marker='+', s=1000)
+    plt.show()

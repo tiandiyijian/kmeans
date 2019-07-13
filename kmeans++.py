@@ -4,6 +4,7 @@ import mat4py
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 import sys
+from sklearn import preprocessing
 
 def distance(pointA, pointB):
     return np.linalg.norm(pointA - pointB)
@@ -63,6 +64,7 @@ def kmeans(data, k, iterations=100):
 if __name__ == '__main__':
     data = mat4py.loadmat('data/toy_clustering.mat')['r1']
     data = np.array(data)
+    data = preprocessing.MinMaxScaler().fit_transform(data)
 
     centroids, classes =  kmeans(data, 3, 5000)
     print(centroids)

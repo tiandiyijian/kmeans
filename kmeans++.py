@@ -18,7 +18,7 @@ def getMinDistance(point, centroids, numOfcentroids):
     return min_distance
 
 
-def kmeans(data, k, iterations=100):
+def kmeanspp(data, k, iterations=100):
     '''
     :param data: points
     :param k: number Of classes
@@ -66,7 +66,7 @@ if __name__ == '__main__':
     data = np.array(data)
     data = preprocessing.MinMaxScaler().fit_transform(data)
 
-    centroids, classes =  kmeans(data, 3, 5000)
+    centroids, classes =  kmeanspp(data, 3, 5000)
     print(centroids)
 
     colors = list(colors.cnames.keys())
